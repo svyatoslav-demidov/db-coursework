@@ -145,12 +145,12 @@ ENGINE = InnoDB
 ```
 
 ------------------------
-### payments
-1. payment_id
-2. payment_cost
-3. payment_date
-4. penalty_id
-5. driver_id
+### payments (Платежи)
+1. payment_id (идентификатор платежа)
+2. payment_cost (сумма платежа)
+3. payment_date (дата проведения платежа)
+4. penalty_id (идентификатор штрафа - назначение плвтежа)
+5. driver_id (идентификатор нарушителя-водителя - кто оплачивает штраф)
 
 ```sql
 CREATE TABLE IF NOT EXISTS `mydb`.`payments` (
@@ -176,7 +176,7 @@ ENGINE = InnoDB
 ```
 
 ------------------------
-### d_licenses (водительские удостоверения)
+### d_licenses (Водительские удостоверения)
 1. license_id (идентефикатор в/у)
 2. license_number (номер в/у)
 3. issue_date (дата получения в/у)
