@@ -12,7 +12,7 @@ db-coursework
 3. [Payments](https://github.com/svyd/db-coursework/blob/master/README.md#payments)
 4. [d_licenses](https://github.com/svyd/db-coursework/blob/master/README.md#d_licenses)
 5. [Penalties](https://github.com/svyd/db-coursework/blob/master/README.md#penalties)
-
+6. [regions](https://github.com/svyd/db-coursework/blob/master/README.md#regions)
 #Хранимые процедуры
 
 Помечаем штраф с заданным id как оплаченный
@@ -68,6 +68,19 @@ END$$
 
 DELIMITER ;
 ```
+Пример использования(на исходных данных):
+
+некорректный платеж
+```sql
+insert into payments(payment_cost, payment_date, penalty_id, driver_id, region_id) values (500, '2012-09-20', 2, 1, 2);
+```
+
+корректный
+```
+insert into payments(payment_cost, payment_date, penalty_id, driver_id, region_id) values (1500, '2012-09-20', 2, 4, 2);
+```
+
+
 
 3. Проверка того факта, что длинна vin-кода составляет именно 17 символов (При добавлении)
 
@@ -122,6 +135,7 @@ ENGINE = InnoDB
 6. body_type (тип кузова автомобиля)
 7. color (цвет автомобиля)
 8. driver_id (идентификатор владельца автомобиля - водителя)
+9. region_id (идентификатор региона, в котором зарегистрирован автомобиль)
 
 ```sql
 CREATE TABLE IF NOT EXISTS `mydb`.`cars` (
@@ -151,6 +165,7 @@ ENGINE = InnoDB
 3. payment_date (дата проведения платежа)
 4. penalty_id (идентификатор штрафа - назначение плвтежа)
 5. driver_id (идентификатор нарушителя-водителя - кто оплачивает штраф)
+6. region_id (идентификатор региона, в котором осуществлен платеж)
 
 ```sql
 CREATE TABLE IF NOT EXISTS `mydb`.`payments` (
@@ -180,7 +195,7 @@ ENGINE = InnoDB
 1. license_id (идентефикатор в/у)
 2. license_number (номер в/у)
 3. issue_date (дата получения в/у)
-4. region (регион получения)
+4. region_id (идентификатор региона получения в/у)
 
 ```sql
 CREATE TABLE IF NOT EXISTS `mydb`.`d_licenses` (
@@ -202,6 +217,7 @@ ENGINE = InnoDB
 4. driver_id (идентификатор нарушителя - водителя)
 5. foul_date (дата получения штрафа)
 6. is_closed (оплачен ли штраф)
+7. region_id (регион, в котором назначен штраф)
 
 ```sql
 CREATE TABLE IF NOT EXISTS `mydb`.`penalties` (
@@ -222,3 +238,9 @@ ENGINE = InnoDB
 ```
 
 ------------------------
+
+### regions (Регионы)
+
+1. region_id (идентификатор региона)
+2. region_code (код региона)
+3. region_name (название региона)
