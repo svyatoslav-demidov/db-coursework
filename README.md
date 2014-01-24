@@ -6,20 +6,95 @@ db-coursework
 
 ------------------------
 
+#Данные
 1. [Drivers](https://github.com/svyd/db-coursework/blob/master/README.md#drivers)
 2. [Cars](https://github.com/svyd/db-coursework/blob/master/README.md#cars)
 3. [Payments](https://github.com/svyd/db-coursework/blob/master/README.md#payments)
 4. [d_licenses](https://github.com/svyd/db-coursework/blob/master/README.md#d_licenses)
 5. [Penalties](https://github.com/svyd/db-coursework/blob/master/README.md#penalties)
 
+#Хранимые процедуры
+
+Помечаем штраф с заданным id как оплаченный
+```sql
+DELIMITER $$
+
+CREATE PROCEDURE `remove_penalty_by_payment` (IN var1 INT)
+BEGIN
+	UPDATE penalties SET is_closed = true where penalties.penalty_id = var1;
+END
+
+```
+
+#Триггеры
+
+1. После успешного добавления платежа вызываем процедуру, которая пометит нужный штраф как проплаченный
+
+```sql
+USE `mydb`;
+DROP trigger IF EXISTS `mydb`.`remove_penalty_trigger`;
+
+DELIMITER $$
+
+CREATE TRIGGER `remove_penalty_trigger` AFTER INSERT ON payments
+for each row
+BEGIN
+        call remove_penalty_by_payment(new.penalty_id);
+END$$
+
+DELIMITER ;
+```
+2. Проверка входящего платежа  перед добавлением (есть ли подходящие под этот платеж штрафы)
+
+```sql
+USE `mydb`;
+DROP trigger IF EXISTS `mydb`.`check_payment_trigger`;
+
+DELIMITER $$
+
+CREATE TRIGGER `check_payment_trigger` BEFORE INSERT ON payments
+for each row
+BEGIN
+        SET @is_good := EXISTS(SELECT * FROM penalties WHERE
+                penalties.cost = new.payment_cost and
+                penalties.penalty_id = new.penalty_id
+                and penalties.driver_id = new.driver_id);
+        if @is_good = 0 then
+                set @msg = "Bad payment";
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @msg;
+        end if;
+END$$
+
+
+DELIMITER ;
+```
+
+3. Проверка того факта, что длинна vin-кода составляет именно 17 символов (При добавлении)
+
+```sql
+DROP trigger IF EXISTS `mydb`.`check_cars_trigger`;
+DELIMITER $$
+CREATE TRIGGER `check_cars_trigger` BEFORE INSERT ON cars
+for each row
+BEGIN
+        if length(new.vin_code) <> 17 then
+                set @msg = "Bad vin_code";
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @msg;
+        end if;
+END$$
+
+DELIMITER ;
+```
+
+
 ------------------------
 #Описание
 ------------------------
-### drivers
-1. driver_id
-2. first_name
-3. last_name
-4. d_license_id
+### drivers (Водитель)
+1. driver_id (идентификатор водителя)
+2. first_name (имя водителя)
+3. last_name (фамилия водителя)
+4. d_license_id (идентификатор в/у водителя)
 
 ```sql
 CREATE TABLE IF NOT EXISTS `mydb`.`drivers` (
@@ -38,15 +113,15 @@ CREATE TABLE IF NOT EXISTS `mydb`.`drivers` (
 ENGINE = InnoDB
 ```
 ------------------------
-### cars
-1. car_id
-2. mark
-3. model
-4. year_issue
-5. vin_code
-6. body_type
-7. color
-8. driver_id
+### cars (Автомобиль)
+1. car_id (идентификатор автомобиля)
+2. mark (марка автомобиля)
+3. model (модель автомобиля)
+4. year_issue (год выпуска автомобиля)
+5. vin_code (vehicle identification number)
+6. body_type (тип кузова автомобиля)
+7. color (цвет автомобиля)
+8. driver_id (идентификатор владельца автомобиля - водителя)
 
 ```sql
 CREATE TABLE IF NOT EXISTS `mydb`.`cars` (
@@ -101,11 +176,11 @@ ENGINE = InnoDB
 ```
 
 ------------------------
-### d_licenses
-1. license_id
-2. license_number
-3. issue_date
-4. region
+### d_licenses (водительские удостоверения)
+1. license_id (идентефикатор в/у)
+2. license_number (номер в/у)
+3. issue_date (дата получения в/у)
+4. region (регион получения)
 
 ```sql
 CREATE TABLE IF NOT EXISTS `mydb`.`d_licenses` (
@@ -120,13 +195,13 @@ ENGINE = InnoDB
 ```
 
 ------------------------
-### penalties
-1. penalty_id
-2. comment 
-3. cost
-4. driver_id
-5. foul_date
-6. is_closed
+### penalties (Штрафы за нарушения)
+1. penalty_id (идентификатор штрафа)
+2. comment (условный комментарий ("за что штраф"))
+3. cost (величина штрафа)
+4. driver_id (идентификатор нарушителя - водителя)
+5. foul_date (дата получения штрафа)
+6. is_closed (оплачен ли штраф)
 
 ```sql
 CREATE TABLE IF NOT EXISTS `mydb`.`penalties` (
