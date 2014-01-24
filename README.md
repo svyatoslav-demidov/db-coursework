@@ -13,6 +13,7 @@ db-coursework
 4. [d_licenses](https://github.com/svyd/db-coursework/blob/master/README.md#d_licenses)
 5. [Penalties](https://github.com/svyd/db-coursework/blob/master/README.md#penalties)
 6. [regions](https://github.com/svyd/db-coursework/blob/master/README.md#regions)
+
 #Хранимые процедуры
 
 Помечаем штраф с заданным id как оплаченный
