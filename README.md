@@ -6,11 +6,11 @@ db-coursework
 
 ------------------------
 
-1. [Drivers](https://github.com/svyd/db-coursework/master/README.md#drivers)
-2. [Cars](https://github.com/svyd/db-coursework/edit/master/README.md#cars)
-3. [Payments](https://github.com/svyd/db-coursework/edit/master/README.md#payments)
-4. [d_licenses](https://github.com/svyd/db-coursework/edit/master/README.md#d_licenses)
-5. [Penalties](https://github.com/svyd/db-coursework/edit/master/README.md#penalties)
+1. [Drivers](https://github.com/svyd/db-coursework/blob/master/README.md#drivers)
+2. [Cars](https://github.com/svyd/db-coursework/blob/master/README.md#cars)
+3. [Payments](https://github.com/svyd/db-coursework/blob/master/README.md#payments)
+4. [d_licenses](https://github.com/svyd/db-coursework/blob/master/README.md#d_licenses)
+5. [Penalties](https://github.com/svyd/db-coursework/blob/master/README.md#penalties)
 
 ------------------------
 #Описание
