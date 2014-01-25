@@ -6,9 +6,6 @@ DROP SCHEMA IF EXISTS `mydb` ;
 CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
 USE `mydb` ;
 
--- -----------------------------------------------------
--- Table `mydb`.`d_licenses`
--- -----------------------------------------------------
 DROP TABLE IF EXISTS `mydb`.`d_licenses` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`d_licenses` (
@@ -22,9 +19,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`d_licenses` (
 ENGINE = InnoDB;
 
 
--- -----------------------------------------------------
--- Table `mydb`.`drivers`
--- -----------------------------------------------------
 DROP TABLE IF EXISTS `mydb`.`drivers` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`drivers` (
@@ -43,9 +37,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`drivers` (
 ENGINE = InnoDB;
 
 
--- -----------------------------------------------------
--- Table `mydb`.`cars`
--- -----------------------------------------------------
 DROP TABLE IF EXISTS `mydb`.`cars` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`cars` (
@@ -68,9 +59,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`cars` (
 ENGINE = InnoDB;
 
 
--- -----------------------------------------------------
--- Table `mydb`.`penalties`
--- -----------------------------------------------------
 DROP TABLE IF EXISTS `mydb`.`penalties` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`penalties` (
@@ -90,9 +78,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`penalties` (
 ENGINE = InnoDB;
 
 
--- -----------------------------------------------------
--- Table `mydb`.`payments`
--- -----------------------------------------------------
 DROP TABLE IF EXISTS `mydb`.`payments` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`payments` (
@@ -118,39 +103,18 @@ ENGINE = InnoDB;
 
 USE `mydb` ;
 
--- -----------------------------------------------------
--- Placeholder table for view `mydb`.`view_drivers_and_licenses`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`view_drivers_and_licenses` (`'driver_id'` INT, `'first_name'` INT, `'last_name'` INT, `'license_number'` INT, `'license_issue_date'` INT);
 
--- -----------------------------------------------------
--- Placeholder table for view `mydb`.`view_drivers_and_cars`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`view_drivers_and_cars` (`'driver_id'` INT, `'first_name'` INT, `'last_name'` INT, `'car_id'` INT, `'mark'` INT, `'model'` INT, `'year'` INT, `'color'` INT, `'vin'` INT);
 
--- -----------------------------------------------------
--- Placeholder table for view `mydb`.`view_drivers_cars_licenses`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`view_drivers_cars_licenses` (`'driver_id'` INT, `'first_name'` INT, `'last_name'` INT, `'mark'` INT, `'model'` INT, `'year'` INT, `'color'` INT, `'vin'` INT, `'license_number'` INT, `'license_issue_date'` INT);
 
--- -----------------------------------------------------
--- Placeholder table for view `mydb`.`view_penalty_with_all`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`view_penalty_with_all` (`'driver_id'` INT, `'first_name'` INT, `'last_name'` INT, `'mark'` INT, `'model'` INT, `'year'` INT, `'color'` INT, `'vin'` INT, `'license_number'` INT, `'license_issue_date'` INT, `'comment'` INT, `'foul_date'` INT, `'cost'` INT);
 
--- -----------------------------------------------------
--- Placeholder table for view `mydb`.`view_drivers_without_license`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`view_drivers_without_license` (`'driver_id'` INT, `'first_name'` INT, `'last_name'` INT);
 
--- -----------------------------------------------------
--- Placeholder table for view `mydb`.`view_closed_penalty_with_all`
--- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`view_closed_penalty_with_all` (`'driver_id'` INT, `'first_name'` INT, `'last_name'` INT, `'mark'` INT, `'model'` INT, `'year'` INT, `'color'` INT, `'vin'` INT, `'license_number'` INT, `'license_issue_date'` INT, `'comment'` INT, `'foul_date'` INT, `'cost'` INT);
 
--- -----------------------------------------------------
--- procedure remove_penalty_by_payment
--- -----------------------------------------------------
 
 USE `mydb`;
 DROP procedure IF EXISTS `mydb`.`remove_penalty_by_payment`;
@@ -166,9 +130,6 @@ $$
 
 DELIMITER ;
 
--- -----------------------------------------------------
--- View `mydb`.`view_drivers_and_licenses`
--- -----------------------------------------------------
 DROP VIEW IF EXISTS `mydb`.`view_drivers_and_licenses` ;
 DROP TABLE IF EXISTS `mydb`.`view_drivers_and_licenses`;
 USE `mydb`;
@@ -181,9 +142,6 @@ d_licenses.license_number as 'license_number',
 d_licenses.issue_date as 'license_issue_date' FROM drivers 
 INNER JOIN d_licenses on drivers.d_license_id = d_licenses.license_id;
 
--- -----------------------------------------------------
--- View `mydb`.`view_drivers_and_cars`
--- -----------------------------------------------------
 DROP VIEW IF EXISTS `mydb`.`view_drivers_and_cars` ;
 DROP TABLE IF EXISTS `mydb`.`view_drivers_and_cars`;
 USE `mydb`;
@@ -198,12 +156,8 @@ cars.model as 'model',
 cars.year_issue as 'year',
 cars.color as 'color', 
 cars.vin_code as 'vin' 
-from drivers inner join cars on drivers.driver_id = cars.driver_id
-;
+from drivers inner join cars on drivers.driver_id = cars.driver_id;
 
--- -----------------------------------------------------
--- View `mydb`.`view_drivers_cars_licenses`
--- -----------------------------------------------------
 DROP VIEW IF EXISTS `mydb`.`view_drivers_cars_licenses` ;
 DROP TABLE IF EXISTS `mydb`.`view_drivers_cars_licenses`;
 USE `mydb`;
@@ -223,9 +177,6 @@ from drivers
 inner join d_licenses on drivers.d_license_id = d_licenses.license_id 
 inner join cars on drivers.driver_id = cars.driver_id;
 
--- -----------------------------------------------------
--- View `mydb`.`view_penalty_with_all`
--- -----------------------------------------------------
 DROP VIEW IF EXISTS `mydb`.`view_penalty_with_all` ;
 DROP TABLE IF EXISTS `mydb`.`view_penalty_with_all`;
 USE `mydb`;
@@ -251,9 +202,6 @@ LEFT OUTER join d_licenses
 on drivers.d_license_id = d_licenses.license_id where penalties.is_closed = FALSE;
 
 
--- -----------------------------------------------------
--- View `mydb`.`view_drivers_without_license`
--- -----------------------------------------------------
 DROP VIEW IF EXISTS `mydb`.`view_drivers_without_license` ;
 DROP TABLE IF EXISTS `mydb`.`view_drivers_without_license`;
 USE `mydb`;
@@ -263,11 +211,8 @@ drivers.driver_id as 'driver_id',
 drivers.first_name as 'first_name',
 drivers.last_name as 'last_name' 
 from drivers where drivers.d_license_id is NULL; 
-;
 
--- -----------------------------------------------------
--- View `mydb`.`view_closed_penalty_with_all`
--- -----------------------------------------------------
+
 DROP VIEW IF EXISTS `mydb`.`view_closed_penalty_with_all` ;
 DROP TABLE IF EXISTS `mydb`.`view_closed_penalty_with_all`;
 USE `mydb`;
@@ -297,51 +242,42 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
--- -----------------------------------------------------
--- Data for table `mydb`.`d_licenses`
--- -----------------------------------------------------
 START TRANSACTION;
 USE `mydb`;
-INSERT INTO `mydb`.`d_licenses` (`license_id`, `license_number`, `issue_date`, `region`) VALUES (1, '3503649015', '2011-08-20', 35);
-INSERT INTO `mydb`.`d_licenses` (`license_id`, `license_number`, `issue_date`, `region`) VALUES (2, '1234567890', '1992-05-25', 78);
-INSERT INTO `mydb`.`d_licenses` (`license_id`, `license_number`, `issue_date`, `region`) VALUES (3, '3214567742', '2012-12-31', 197);
+INSERT INTO `mydb`.`d_licenses` (`license_id`, `license_number`, `issue_date`, `region_id`) VALUES (1, '3503649015', '2011-08-20', 1);
+INSERT INTO `mydb`.`d_licenses` (`license_id`, `license_number`, `issue_date`, `region_id`) VALUES (2, '1234567890', '1992-05-25', 2);
+INSERT INTO `mydb`.`d_licenses` (`license_id`, `license_number`, `issue_date`, `region_id`) VALUES (3, '3214567742', '2012-12-31', 4);
+INSERT INTO `mydb`.`d_licenses` (`license_id`, `license_number`, `issue_date`, `region_id`) VALUES (4, '3232323234', '2004-03-03', 3);
 
 COMMIT;
 
 
--- -----------------------------------------------------
--- Data for table `mydb`.`drivers`
--- -----------------------------------------------------
 START TRANSACTION;
 USE `mydb`;
 INSERT INTO `mydb`.`drivers` (`driver_id`, `first_name`, `last_name`, `d_license_id`) VALUES (1, 'Svyatoslav', 'Demidov', 1);
 INSERT INTO `mydb`.`drivers` (`driver_id`, `first_name`, `last_name`, `d_license_id`) VALUES (2, 'Petrov', 'Ivan', 2);
 INSERT INTO `mydb`.`drivers` (`driver_id`, `first_name`, `last_name`, `d_license_id`) VALUES (3, 'Sidorov', 'Petr', 3);
 INSERT INTO `mydb`.`drivers` (`driver_id`, `first_name`, `last_name`, `d_license_id`) VALUES (4, 'Miron', 'Mironov', NULL);
+INSERT INTO `mydb`.`drivers` (`driver_id`, `first_name`, `last_name`, `d_license_id`) VALUES (5, 'Anton', 'Antonov', 4);
 
 COMMIT;
 
 
--- -----------------------------------------------------
--- Data for table `mydb`.`cars`
--- -----------------------------------------------------
 START TRANSACTION;
 USE `mydb`;
-INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`) VALUES (1, 'BMW', 'X5', 2005, 'WBACS11020FR83379', 'CROSSOVER', 'BLACK', 1);
-INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`) VALUES (2, 'VOLKSWAGEN', 'GOLF', 2011, 'CDBEW12060EC53335', 'HATCHBACK', 'GREEN', 1);
-INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`) VALUES (3, 'VAZ', '2115', 2005, 'CDBEW12063RC53335', 'SEDAN', 'SILVER', 2);
-INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`) VALUES (4, 'ALPINA', 'B6', 2013, 'WVESFEWSFEWQERDFD', 'COUPE', 'RED', 4);
+INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`, `region_id`) VALUES (1, 'BMW', 'X5', 2005, 'WBACS11020FR83379', 'CROSSOVER', 'BLACK', 1, 1);
+INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`, `region_id`) VALUES (2, 'VOLKSWAGEN', 'GOLF', 2011, 'CDBEW12060EC53335', 'HATCHBACK', 'GREEN', 1, 2);
+INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`, `region_id`) VALUES (3, 'VAZ', '2115', 2005, 'CDBEW12063RC53335', 'SEDAN', 'SILVER', 2, 3);
+INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`, `region_id`) VALUES (4, 'ALPINA', 'B6', 2013, 'WVESFEWSFEWQERDFD', 'COUPE', 'RED', 4, 4);
+INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`, `region_id`) VALUES (5, 'BMW', '3ER', 1999, 'DDDDDDDDDDDDDDDDD', 'HATCHBACK', 'SILVER', 5, 2);
 
 COMMIT;
 
-
--- -----------------------------------------------------
--- Data for table `mydb`.`penalties`
--- -----------------------------------------------------
 START TRANSACTION;
 USE `mydb`;
-INSERT INTO `mydb`.`penalties` (`penalty_id`, `comment`, `cost`, `driver_id`, `foul_date`, `is_closed`) VALUES (1, 'Превышение скорости на 10 км/ч', 500, 2, '2012-08-20', FALSE);
-INSERT INTO `mydb`.`penalties` (`penalty_id`, `comment`, `cost`, `driver_id`, `foul_date`, `is_closed`) VALUES (2, 'Езда без прав', 1500, 4, '2011-05-03', FALSE);
+INSERT INTO `mydb`.`penalties` (`penalty_id`, `comment`, `cost`, `driver_id`, `foul_date`, `is_closed`, `region_id`) VALUES (1, 'Превышение скорости на 10 км/ч', 500, 2, '2012-08-20', FALSE, 1);
+INSERT INTO `mydb`.`penalties` (`penalty_id`, `comment`, `cost`, `driver_id`, `foul_date`, `is_closed`, `region_id`) VALUES (2, 'Езда без прав', 1500, 4, '2011-05-03', FALSE, 2);
+INSERT INTO `mydb`.`penalties` (`penalty_id`, `comment`, `cost`, `driver_id`, `foul_date`, `is_closed`, `region_id`) VALUES (3, 'Нарушение правил парковки', 2000, 3, '2013-04-24', FALSE, 1);
 
 COMMIT;
 
