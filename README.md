@@ -362,4 +362,48 @@ LEFT OUTER join d_licenses
 on drivers.d_license_id = d_licenses.license_id where penalties.is_closed = TRUE;
 
 ```
+----------------------------
 
+### DATA
+
+```sql
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`d_licenses` (`license_id`, `license_number`, `issue_date`, `region_id`) VALUES (1, '3503649015', '2011-08-20', 1);
+INSERT INTO `mydb`.`d_licenses` (`license_id`, `license_number`, `issue_date`, `region_id`) VALUES (2, '1234567890', '1992-05-25', 2);
+INSERT INTO `mydb`.`d_licenses` (`license_id`, `license_number`, `issue_date`, `region_id`) VALUES (3, '3214567742', '2012-12-31', 4);
+INSERT INTO `mydb`.`d_licenses` (`license_id`, `license_number`, `issue_date`, `region_id`) VALUES (4, '3232323234', '2004-03-03', 3);
+
+COMMIT;
+
+
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`drivers` (`driver_id`, `first_name`, `last_name`, `d_license_id`) VALUES (1, 'Svyatoslav', 'Demidov', 1);
+INSERT INTO `mydb`.`drivers` (`driver_id`, `first_name`, `last_name`, `d_license_id`) VALUES (2, 'Petrov', 'Ivan', 2);
+INSERT INTO `mydb`.`drivers` (`driver_id`, `first_name`, `last_name`, `d_license_id`) VALUES (3, 'Sidorov', 'Petr', 3);
+INSERT INTO `mydb`.`drivers` (`driver_id`, `first_name`, `last_name`, `d_license_id`) VALUES (4, 'Miron', 'Mironov', NULL);
+INSERT INTO `mydb`.`drivers` (`driver_id`, `first_name`, `last_name`, `d_license_id`) VALUES (5, 'Anton', 'Antonov', 4);
+
+COMMIT;
+
+
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`, `region_id`) VALUES (1, 'BMW', 'X5', 2005, 'WBACS11020FR83379', 'CROSSOVER', 'BLACK', 1, 1);
+INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`, `region_id`) VALUES (2, 'VOLKSWAGEN', 'GOLF', 2011, 'CDBEW12060EC53335', 'HATCHBACK', 'GREEN', 1, 2);
+INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`, `region_id`) VALUES (3, 'VAZ', '2115', 2005, 'CDBEW12063RC53335', 'SEDAN', 'SILVER', 2, 3);
+INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`, `region_id`) VALUES (4, 'ALPINA', 'B6', 2013, 'WVESFEWSFEWQERDFD', 'COUPE', 'RED', 4, 4);
+INSERT INTO `mydb`.`cars` (`car_id`, `mark`, `model`, `year_issue`, `vin_code`, `body_type`, `color`, `driver_id`, `region_id`) VALUES (5, 'BMW', '3ER', 1999, 'DDDDDDDDDDDDDDDDD', 'HATCHBACK', 'SILVER', 5, 2);
+
+COMMIT;
+
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`penalties` (`penalty_id`, `comment`, `cost`, `driver_id`, `foul_date`, `is_closed`, `region_id`) VALUES (1, 'Превышение скорости на 10 км/ч', 500, 2, '2012-08-20', FALSE, 1);
+INSERT INTO `mydb`.`penalties` (`penalty_id`, `comment`, `cost`, `driver_id`, `foul_date`, `is_closed`, `region_id`) VALUES (2, 'Езда без прав', 1500, 4, '2011-05-03', FALSE, 2);
+INSERT INTO `mydb`.`penalties` (`penalty_id`, `comment`, `cost`, `driver_id`, `foul_date`, `is_closed`, `region_id`) VALUES (3, 'Нарушение правил парковки', 2000, 3, '2013-04-24', FALSE, 1);
+
+COMMIT;
+
+```
