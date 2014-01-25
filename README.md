@@ -4,6 +4,8 @@ db-coursework
 ##Схема:
 ![Схема](model.png)
 
+![Схема](model_p.png)
+
 ------------------------
 
 #Данные
@@ -245,3 +247,119 @@ ENGINE = InnoDB
 1. region_id (идентификатор региона)
 2. region_code (код региона)
 3. region_name (название региона)
+
+
+------------------------
+### Views
+
+```sql
+
+DROP VIEW IF EXISTS `mydb`.`view_drivers_and_licenses` ;
+DROP TABLE IF EXISTS `mydb`.`view_drivers_and_licenses`;
+USE `mydb`;
+CREATE  OR REPLACE VIEW `view_drivers_and_licenses` AS
+SELECT 
+drivers.driver_id as 'driver_id',
+drivers.first_name as 'first_name',
+drivers.last_name as 'last_name',
+d_licenses.license_number as 'license_number',
+d_licenses.issue_date as 'license_issue_date' FROM drivers 
+INNER JOIN d_licenses on drivers.d_license_id = d_licenses.license_id;
+
+DROP VIEW IF EXISTS `mydb`.`view_drivers_and_cars` ;
+DROP TABLE IF EXISTS `mydb`.`view_drivers_and_cars`;
+USE `mydb`;
+CREATE  OR REPLACE VIEW `view_drivers_and_cars` AS
+select 
+drivers.driver_id as 'driver_id',
+drivers.first_name as 'first_name',
+drivers.last_name as 'last_name',
+cars.car_id as 'car_id',
+cars.mark as 'mark',
+cars.model as 'model',
+cars.year_issue as 'year',
+cars.color as 'color', 
+cars.vin_code as 'vin' 
+from drivers inner join cars on drivers.driver_id = cars.driver_id;
+
+DROP VIEW IF EXISTS `mydb`.`view_drivers_cars_licenses` ;
+DROP TABLE IF EXISTS `mydb`.`view_drivers_cars_licenses`;
+USE `mydb`;
+CREATE  OR REPLACE VIEW `view_drivers_cars_licenses` AS
+select
+drivers.driver_id as 'driver_id', 
+drivers.first_name as 'first_name',
+drivers.last_name as 'last_name',
+cars.mark as 'mark',
+cars.model as 'model',
+cars.year_issue as 'year',
+cars.color as 'color', 
+cars.vin_code as 'vin',
+d_licenses.license_number as 'license_number',
+d_licenses.issue_date as 'license_issue_date' 
+from drivers 
+inner join d_licenses on drivers.d_license_id = d_licenses.license_id 
+inner join cars on drivers.driver_id = cars.driver_id;
+
+DROP VIEW IF EXISTS `mydb`.`view_penalty_with_all` ;
+DROP TABLE IF EXISTS `mydb`.`view_penalty_with_all`;
+USE `mydb`;
+CREATE  OR REPLACE VIEW `view_penalty_with_all` AS
+select 
+drivers.driver_id as 'driver_id',
+drivers.first_name as 'first_name',
+drivers.last_name as 'last_name',
+cars.mark as 'mark',
+cars.model as 'model',
+cars.year_issue as 'year',
+cars.color as 'color', 
+cars.vin_code as 'vin',
+d_licenses.license_number as 'license_number',
+d_licenses.issue_date as 'license_issue_date',
+penalties.comment as 'comment',
+penalties.foul_date as 'foul_date',
+penalties.cost as 'cost' 
+from drivers 
+inner join cars on drivers.driver_id = cars.driver_id
+inner join penalties on drivers.driver_id = penalties.driver_id
+LEFT OUTER join d_licenses 
+on drivers.d_license_id = d_licenses.license_id where penalties.is_closed = FALSE;
+
+
+DROP VIEW IF EXISTS `mydb`.`view_drivers_without_license` ;
+DROP TABLE IF EXISTS `mydb`.`view_drivers_without_license`;
+USE `mydb`;
+CREATE  OR REPLACE VIEW `view_drivers_without_license` AS
+select 
+drivers.driver_id as 'driver_id',
+drivers.first_name as 'first_name',
+drivers.last_name as 'last_name' 
+from drivers where drivers.d_license_id is NULL; 
+;
+
+DROP VIEW IF EXISTS `mydb`.`view_closed_penalty_with_all` ;
+DROP TABLE IF EXISTS `mydb`.`view_closed_penalty_with_all`;
+USE `mydb`;
+CREATE  OR REPLACE VIEW `view_closed_penalty_with_all` AS
+select 
+drivers.driver_id as 'driver_id',
+drivers.first_name as 'first_name',
+drivers.last_name as 'last_name',
+cars.mark as 'mark',
+cars.model as 'model',
+cars.year_issue as 'year',
+cars.color as 'color', 
+cars.vin_code as 'vin',
+d_licenses.license_number as 'license_number',
+d_licenses.issue_date as 'license_issue_date',
+penalties.comment as 'comment',
+penalties.foul_date as 'foul_date',
+penalties.cost as 'cost' 
+from drivers 
+inner join cars on drivers.driver_id = cars.driver_id
+inner join penalties on drivers.driver_id = penalties.driver_id
+LEFT OUTER join d_licenses 
+on drivers.d_license_id = d_licenses.license_id where penalties.is_closed = TRUE;
+
+```
+
