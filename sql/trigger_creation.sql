@@ -1,4 +1,21 @@
 USE `mydb`;
+
+DELIMITER $$
+
+CREATE TRIGGER `check_license_years_trigger` BEFORE INSERT ON d_licenses
+for each row
+BEGIN
+        if DATEDIFF(new.licence_end, new.issue_date) > 0 then
+                set @msg = "Bad license";
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @msg;
+        end if;
+END$$
+
+
+DELIMITER ;
+
+USE `mydb`;
+
 DROP trigger IF EXISTS `mydb`.`remove_penalty_trigger`;
 
 DELIMITER $$
