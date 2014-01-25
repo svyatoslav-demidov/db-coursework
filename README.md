@@ -204,15 +204,24 @@ ENGINE = InnoDB
 4. region_id (идентификатор региона получения в/у)
 
 ```sql
+DROP TABLE IF EXISTS `mydb`.`d_licenses` ;
+
 CREATE TABLE IF NOT EXISTS `mydb`.`d_licenses` (
   `license_id` INT NOT NULL AUTO_INCREMENT,
   `license_number` VARCHAR(45) NOT NULL,
   `issue_date` DATE NOT NULL,
-  `region` INT NOT NULL,
+  `region_id` INT NOT NULL,
+  `licence_end` DATE NOT NULL,
   PRIMARY KEY (`license_id`),
   UNIQUE INDEX `license_id_UNIQUE` (`license_id` ASC),
-  UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC))
-ENGINE = InnoDB
+  UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC),
+  INDEX `fk_d_licenses_regions1_idx` USING BTREE (`region_id` ASC),
+  CONSTRAINT `fk_d_licenses_regions1`
+    FOREIGN KEY (`region_id`)
+    REFERENCES `mydb`.`regions` (`region_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 ```
 
 ------------------------
