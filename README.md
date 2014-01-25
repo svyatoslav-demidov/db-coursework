@@ -232,6 +232,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`penalties` (
   `is_closed` TINYINT(1) NULL DEFAULT FALSE,
   PRIMARY KEY (`penalty_id`),
   INDEX `fk_penalty_drivers1_idx` (`driver_id` ASC),
+  INDEX `date_index` USING BTREE (`foul_date` ASC),
   CONSTRAINT `fk_penalty_drivers1`
     FOREIGN KEY (`driver_id`)
     REFERENCES `mydb`.`drivers` (`driver_id`)
