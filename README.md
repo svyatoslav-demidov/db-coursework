@@ -16,6 +16,9 @@ db-coursework
 5. [Penalties](https://github.com/svyd/db-coursework/blob/master/README.md#penalties)
 6. [regions](https://github.com/svyd/db-coursework/blob/master/README.md#regions)
 
+В drivers хранятся водители, в cars - автомобили, в d_licenses - информация о водительских удостоверениях,
+в Penalties - штрафы, в Payments - платежи за штрафы, в regions - регионы(в которых может быть выдано в/у, зарегистрирован автомобиль, получен и оплачен штраф)
+
 #Хранимые процедуры
 
 Помечаем штраф с заданным id как оплаченный
